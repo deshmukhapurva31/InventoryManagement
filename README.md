@@ -1,8 +1,13 @@
 The Web API project provides API’s for various actions to manage the inventory for Apparels.
+
 Entity Framework is used to manage the database connection. (InventoryApiDbContext.cs)
+
 Also for development purpose and local testing, seed data is added which will give test data for products.(File Name: SeedData.cs)
+
 The Service folder contains Service classes acting as middleware between DBContext and Controllers.
+
 The Infrastructure folder contains Mapping class to map entity classes with models.
+
 The filters folder include below 2 files:
 1.	JsonExceptionFilter.cs :- Inherited from IExceptionFilter which will handle the error handling logic and simplifies error message as per environment(ApiError.cs)
 2.	RequireHttpsOrCloseAttribue.cs  : - Inherited from RequireHttpsAttribute which adds security and prevents calls from http and allows only https calls
