@@ -11,6 +11,7 @@ The Infrastructure folder contains Mapping class to map entity classes with mode
 The filters folder include below 2 files:
 1.	JsonExceptionFilter.cs :- Inherited from IExceptionFilter which will handle the error handling logic and simplifies error message as per environment(ApiError.cs)
 2.	RequireHttpsOrCloseAttribue.cs  : - Inherited from RequireHttpsAttribute which adds security and prevents calls from http and allows only https calls
+
 Functionalities Added-
 •	Get All Products
 o	GET https://localhost:XXXXX/Product
