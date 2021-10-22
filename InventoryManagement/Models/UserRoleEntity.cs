@@ -11,8 +11,9 @@ namespace InventoryManagement.Models
         public UserRoleEntity() : base(){
 
         }
-        public override Guid Id { get => base.Id; set => base.Id = value; }
-        public UserRoleEntity(string Name) : base(Name){
+       // public override Guid Id { get => base.Id; set => base.Id = value; }
+        public UserRoleEntity(string roleName) : base(roleName)
+        {
 
         }
     }

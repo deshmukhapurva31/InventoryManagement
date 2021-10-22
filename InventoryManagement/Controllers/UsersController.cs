@@ -43,5 +43,18 @@ namespace InventoryManagement.Controllers
             // If not, only Admin roles should be able to view arbitrary users.
             throw new NotImplementedException();
         }
+
+        [HttpPost(Name =nameof(RegisterUser))]
+        public async Task<IActionResult> RegisterUser([FromBody] RegisterForm form)
+        {
+            var (sucess, message) = await _userService.CreateUserAsync(form);
+            if (sucess) return Created("todo", null);
+
+            return BadRequest(new ApiError
+            {
+                Message = "Registration Failed",
+                Details = message
+            });
+        }
     }
 }

@@ -13,10 +13,10 @@ namespace InventoryManagement
 
         public static async Task InitailizeAsync(IServiceProvider services)
         {
-            //await AddTestUsers(
-            //    services.GetRequiredService<RoleManager<UserRoleEntity>>(),
-            //    services.GetRequiredService<UserManager<UserEntity>>()
-            //    );
+            await AddTestUsers(
+                services.GetRequiredService<RoleManager<UserRoleEntity>>(),
+                services.GetRequiredService<UserManager<UserEntity>>()
+                );
             await AddTestData(services.GetRequiredService<InventoryApiDbContext>());
         }
         public static async Task AddTestData(InventoryApiDbContext context)
@@ -86,8 +86,8 @@ namespace InventoryManagement
             // Add a test user
             var user = new UserEntity
             {
-                Email = "admin@landon.local",
-                UserName = "admin@landon.local",
+                Email = "admin@prime.com",
+                UserName = "admin@prime.com",
                 FirstName = "Admin",
                 LastName = "Tester",
                 CreatedAt = DateTimeOffset.UtcNow,
@@ -95,11 +95,13 @@ namespace InventoryManagement
                 Id = Guid.NewGuid()
             };
 
-            await userManager.CreateAsync(user, "Test123");
+           await userManager.CreateAsync(user, "Test@123");
 
             // Put the user in the admin role
             await userManager.AddToRoleAsync(user, "Admin");
-            //await userManager.UpdateAsync(user);
+            await userManager.UpdateAsync(user);
         }
+
+       
     }
 }

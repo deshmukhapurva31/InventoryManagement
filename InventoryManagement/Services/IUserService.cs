@@ -9,5 +9,7 @@ namespace InventoryManagement.Services
     public interface IUserService
     {
         Task<Collection<User>> GetUsersAsync();
+
+        Task <(bool success,string ErrorMessage)> CreateUserAsync(RegisterForm form);
     }
 }

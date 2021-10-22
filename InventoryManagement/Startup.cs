@@ -17,6 +17,8 @@ using System.Threading.Tasks;
 using InventoryManagement.Services;
 using InventoryManagement.Infrastructure;
 using Microsoft.AspNetCore.Identity;
+using OpenIddict.Validation;
+using AspNet.Security.OpenIdConnect.Primitives;
 
 namespace InventoryManagement
 {
@@ -37,6 +39,7 @@ namespace InventoryManagement
             {
                 options.Filters.Add<JsonExceptionFilter>();
                 options.Filters.Add<RequireHttpsOrCloseAttribue>();
+                options.EnableEndpointRouting = false;
                // options.Filters.Add<LinkRewritingFilter>();
             });
             services.AddControllers();
@@ -52,12 +55,45 @@ namespace InventoryManagement
                 options.ApiVersionSelector = new CurrentImplementationApiVersionSelector(options);
             });
             services.Configure<Inventory>(Configuration.GetSection("Info"));
-            services.AddDbContext<InventoryApiDbContext>(options => options.UseInMemoryDatabase("inventoryapi"));
+            services.AddDbContext<InventoryApiDbContext>(options => {
+                options.UseInMemoryDatabase("inventoryapi");
+                options.UseOpenIddict<Guid>();
+            });
 
+ 
+
+
+            services.AddOpenIddict()
+            .AddCore(options =>
+            {
+                options.UseEntityFrameworkCore().UseDbContext<InventoryApiDbContext>().ReplaceDefaultEntities<Guid>();
+            })
+            .AddServer(options =>
+            {
+                options.UseMvc();
+                options.SetTokenEndpointUris("/token");
+                options.AllowPasswordFlow();
+                options.AcceptAnonymousClients();
+            })
+            .AddValidation();
+
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.ClaimsIdentity.UserNameClaimType = OpenIdConnectConstants.Claims.Name;
+                options.ClaimsIdentity.UserIdClaimType = OpenIdConnectConstants.Claims.Subject;
+                options.ClaimsIdentity.RoleClaimType = OpenIdConnectConstants.Claims.Role;
+            });
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = OpenIdConnectConstants.Schemes.Bearer;
+            });
             //Add ASP.Net core Identity
             AddIdentityCoreServices(services);
 
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IUserService, UserService>();
             services.AddAutoMapper(options => options.AddProfile<MappingProfile>());
         }
 
@@ -87,12 +123,13 @@ namespace InventoryManagement
             }
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+            app.UseMvc();
         }
     }
 }

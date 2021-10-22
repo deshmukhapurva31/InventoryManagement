@@ -12,6 +12,7 @@ namespace InventoryManagement.Infrastructure
         public MappingProfile()
         {
             CreateMap<ProductEntity, Product>();
+            CreateMap<UserEntity, User>();
         }
     }
 }

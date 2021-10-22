@@ -24,6 +24,25 @@ namespace InventoryManagement.Services
             _mappingConfiguration = mappingConfiguration;
         }
 
+        public async Task<(bool success, string ErrorMessage)> CreateUserAsync(RegisterForm form)
+        {
+            var entity = new UserEntity
+            {
+                Email=form.Email,
+                UserName=form.Email,
+                FirstName=form.FirstName,
+                LastName=form.LastName,
+                CreatedAt=DateTimeOffset.UtcNow
+            };
+            var result = await _userManager.CreateAsync(entity, form.Password);
+            if (!result.Succeeded)
+            {
+                var firstError = result.Errors.FirstOrDefault()?.Description;
+                return (false, firstError);
+            }
+            return (true, null);
+        }
+
         public async Task <Collection<User>> GetUsersAsync()
         {
             IQueryable<UserEntity> query = _userManager.Users;
